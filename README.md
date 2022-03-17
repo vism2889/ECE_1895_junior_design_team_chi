@@ -1,4 +1,7 @@
-# ECE_1895_junior_design_team_chi
+# Junior Design Team Chi: Design Project # 2
+University of Pittsburgh <br>
+Swanson School of Engineering <br>
+Spring 2022 <br>
 ### Repository to hold collaborator contributions to Team-Chi's Group Junior Design Project
 
 ## Contributing Members & Roles:
