@@ -1,6 +1,7 @@
 #define LED1 7
 #define IN 4
 // Chris Guiher 
+// Alex Shuster
 
 void setup() {
   // initialize digital pin LED_BUILTIN as an output.
