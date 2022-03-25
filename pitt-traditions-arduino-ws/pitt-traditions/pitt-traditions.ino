@@ -52,6 +52,7 @@ const int randomPin        = 0;
 // STATE VARIABLES
 int curr_time              = 0;
 int command_count          = 0;
+int userScore              = 0;
 int randomNumber;
 
 /*
@@ -89,7 +90,7 @@ void setup()
  */
 void panthers_nose()
 {
-  int    vCurrentTime   = millis();
+  currTime = millis();
   
   startPlaybackSample(panthersNoseSample, sizeof(panthersNoseSample));
      
@@ -97,7 +98,7 @@ void panthers_nose()
      
   if (nose_joy_stick == moved and millis() - vCurrentTime < currTimeInterval)
   {
-    Score += 1; 
+    userScore += 1; 
   }
   else
   {
@@ -110,7 +111,7 @@ void panthers_nose()
  */
 void victory_lights()
 {
-  int    vCurrentTime   = millis();
+  currTime = millis();
   
   startPlaybackSample(victoryLightsSample, sizeof(victoryLightsSample));
      
@@ -118,7 +119,7 @@ void victory_lights()
   
   if (lightSensorPin == HIGH and millis() - vCurrentTime < currTimeInterval)
   {
-    Score += 1; 
+    userScore += 1; 
   }
   else
   {
@@ -131,15 +132,15 @@ void victory_lights()
  */
 void hail_to_pitt()
 {
-  int    vCurrentTime   = millis();
+  currTime = millis();
   
   startPlaybackSample(hailToPittSample, sizeof(hailToPittSample));
      
   displayMessage(hailToPittCommand); // Displays command on LCD
      
-  if (microphonePin == HIGH and millis() - vCurrentTime < currTimeInterval)
+  if (readFromMicrophone() and millis() - vCurrentTime < currTimeInterval)
   {
-    Score += 1; 
+    userScore += 1; 
   }
   else
   {
@@ -147,6 +148,9 @@ void hail_to_pitt()
   }
 }
 
+/*
+ * Method to hold functionality that is executed when the game ends
+ */
 void gameOver(String pMessage)
 {
   game_started = false;
@@ -165,6 +169,9 @@ String pickRamdomCommand()
   return random_command;
 }
 
+/*
+ * Method to hold functionality that is executed when an application error is raised
+ */
 void raise_application_error()
 {
   Serial.print("Application Error Encountered");
@@ -195,6 +202,26 @@ void displayMessage()
 }
 
 /*
+ * Method to hold the functionality to read an analog value from the microphone
+ */
+boolean readFromMicrophone()
+{
+  int micVal = 0;
+  boolean cheer = false;
+  micVal     = analogRead(micPin);
+  if (micVal > 600) 
+  {
+    cheer = true;
+  }
+  else 
+  {
+    cheer = false;
+  }
+
+  return cheer;
+}
+
+/*
  * Main application loop that holds the overarching logic flow for the pitt-traditions
  * Bop-It game.
  */
@@ -208,33 +235,35 @@ void loop()
   {
     game_started = false;
   }
-     
+
+  // GAME PLAY LOGIC FLOW
   while(game_started == true)
   {
-    
     if (command_count >= 99)
     {
       startPlaybackSample(hailToPittWinningJingle, sizeof(hailToPittWinningJingle));
       displayMessage("GAME OVER. YOU WON!");
       game_started = false;
     }
-    
-    issuedCommand = pickRandomCommand();
-    
-    switch(issuedCommand)
+    else
     {
-      case 0:
-        hail_to_pitt();
-        break;
-      case 1:
-        victory_lights();
-        break;
-      case 2;
-        panthers_nose();
-        break;
-      default:
-        raise_application_error();
-        break;
-    }    
+      issuedCommand = pickRandomCommand();
+    
+      switch(issuedCommand)
+      {
+        case 0:
+          hail_to_pitt();
+          break;
+        case 1:
+          victory_lights();
+          break;
+        case 2;
+          panthers_nose();
+          break;
+        default:
+          raise_application_error();
+          break;
+      } 
+    }
   }
 }

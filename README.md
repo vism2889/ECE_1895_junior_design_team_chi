@@ -28,7 +28,7 @@ Spring 2022 <br>
 - https://www.arduino.cc/en/Reference/Random
 - https://github.com/johnrickman/LiquidCrystal_I2C/blob/master/examples/HelloWorld/HelloWorld.pde
 - https://create.arduino.cc/projecthub/Arnov_Sharma_makes/lcd-i2c-tutorial-664e5a
-
+- https://www.aranacorp.com/en/using-a-microphone-with-arduino/
 ## Altium
 - TBD
 ## Fusion360
