@@ -1,13 +1,14 @@
 /**************************************************************
- * AUTHOR(S):    Morgan Visnesky
- * DATE:         03/18/2022
+ * AUTHOR:       Morgan Visnesky
+ * CREATED:      03/18/2022
+ * MODIFIED:     03/25/2022
  * FILENAME:     pitt-traditions.ino
  * ORGANIZATION: Junior Design Team CHI
- * TEAM MEMBERS: 
- *              Chris Guiher 
- *              Alex Shuster
- *              Morgan Visnesky
- *              David Cramer
+ * MEMBERS: 
+ *          Chris Guiher 
+ *          Alex Shuster
+ *          Morgan Visnesky
+ *          David Cramer
  *
  * DESCRIPTION: 
  *     Driver file for Pitt-Traditions "Bop-it" Arduino application.
