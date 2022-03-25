@@ -30,6 +30,7 @@ Spring 2022 <br>
 - [I2C LCD Example #2](https://create.arduino.cc/projecthub/Arnov_Sharma_makes/lcd-i2c-tutorial-664e5a)
 - [Mic Example](https://www.aranacorp.com/en/using-a-microphone-with-arduino/)
 - [Text To Speech](https://ttsmp3.com/)
+- [Updated Audio Converter](https://github.com/damellis/EncodeAudio/blob/36c9dcb94ca66bf2e319c84b3f95d38b755265b2/EncodeAudio.pde)
 ## Altium
 - TBD
 ## Fusion360
