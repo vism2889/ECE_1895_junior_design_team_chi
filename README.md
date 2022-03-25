@@ -24,11 +24,12 @@ Spring 2022 <br>
 
 # Citations & References:
 ## Arduino
-- https://www.youtube.com/watch?v=m1HEwgHSBrs&t=9s
-- https://www.arduino.cc/en/Reference/Random
-- https://github.com/johnrickman/LiquidCrystal_I2C/blob/master/examples/HelloWorld/HelloWorld.pde
-- https://create.arduino.cc/projecthub/Arnov_Sharma_makes/lcd-i2c-tutorial-664e5a
-- https://www.aranacorp.com/en/using-a-microphone-with-arduino/
+- [MP3 Example](https://www.youtube.com/watch?v=m1HEwgHSBrs&t=9s)
+- [Random Reference](https://www.arduino.cc/en/Reference/Random)
+- [I2C LCD Example #1](https://github.com/johnrickman/LiquidCrystal_I2C/blob/master/examples/HelloWorld/HelloWorld.pde)
+- [I2C LCD Example #2](https://create.arduino.cc/projecthub/Arnov_Sharma_makes/lcd-i2c-tutorial-664e5a)
+- [Mic Example](https://www.aranacorp.com/en/using-a-microphone-with-arduino/)
+- [Text To Speech](https://ttsmp3.com/)
 ## Altium
 - TBD
 ## Fusion360
