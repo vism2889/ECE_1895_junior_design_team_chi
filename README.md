@@ -20,12 +20,15 @@ Spring 2022 <br>
 
 # [Proposed Project Description](https://github.com/vism2889/ECE_1895_junior_design_team_chi/blob/base-arduino-functionality/Team%20CHI%20Design%20Proposal.pdf)
 
-
+# Game Play Instructions:
 
 # Citations & References:
 ## Arduino
 - https://www.youtube.com/watch?v=m1HEwgHSBrs&t=9s
 - https://www.arduino.cc/en/Reference/Random
+- https://github.com/johnrickman/LiquidCrystal_I2C/blob/master/examples/HelloWorld/HelloWorld.pde
+- https://create.arduino.cc/projecthub/Arnov_Sharma_makes/lcd-i2c-tutorial-664e5a
+
 ## Altium
 - TBD
 ## Fusion360

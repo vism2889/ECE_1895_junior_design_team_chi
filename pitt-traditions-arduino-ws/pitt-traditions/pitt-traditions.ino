@@ -1,26 +1,58 @@
-// AUTHOR(S):    Morgan Visnesky
-// DATE:         03/18/2022
-// FILENAME:     pitt-traditions.ino
-// ORGANIZATION: Junior Design Team CHI
-//
-// DESCRIPTION: 
-//      Driver file pitt-traditions Bop-it arduino application
+/**************************************************************
+ * AUTHOR(S):    Morgan Visnesky
+ * DATE:         03/18/2022
+ * FILENAME:     pitt-traditions.ino
+ * ORGANIZATION: Junior Design Team CHI
+ * TEAM MEMBERS: 
+ *              Chris Guiher 
+ *              Alex Shuster
+ *              Morgan Visnesky
+ *              David Cramer
+ *
+ * DESCRIPTION: 
+ *     Driver file for Pitt-Traditions "Bop-it" Arduino application.
+ **************************************************************/
 
-// LIBRARY IMPORTS
+// IMPORTED CODE
+#include <PCM.h>               // Library for MP3 playback
+#include <LiquidCrystal_I2C.h> // Library for I2C LCD display 
 
-// INPUT VARIABLES
+LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
+
+
+// ARRAYS TO HOLD GAME AUDIO
+const unsigned char hailToPittSample[]        PROGMEM = {};
+const unsigned char panthersNoseSample[]      PROGMEM = {};
+const unsigned char victoryLightsSample[]     PROGMEM = {};
+const unsigned char hailToPittWinningJingle[] PROGMEM = {};
+
+// GAME MESSAGES FOR LCD DISPLAY 
+// -> Some of these may need split into 2 strings so they fit onto the display properly
+const String winningMessage       = "GAME OVER. YOU WON!";
+const String loosingMessage       = "GAME OVER. YOU LOST!";
+const String panthersNoseCommand  = "Rub the Panthers Nose!";
+const String victoryLightsCommand = "Light the Victory Lights!";
+const String hailToPittCommand    = "Cheer Hail to Pitt!";
+const String welcomeMessage       = "PITT TRADITIONS";
+const String startMessage         = "Press Start!";
+
+// INPUT VARIABLES THAT MAP TO ARDUINO PINS
 const int micPin           = 13;
 const int joyStickPin      = 12;
 const int photoResistorPin = 2;
-const int startButton      = 8;
+const int startSwitch      = 8;
 
-// OUTPUT VARIABLES
+// OUTPUT VARIABLES THAT MAP TO ARDUINO PINS
 const int speakerPin       = 4;
 const int hexDisplayPin    = 7;
+
+// 'RANDOM' VARIABLES THAT MAP TO ARDUINO PINS
+const int randomPin        = 0;
 
 // STATE VARIABLES
 int curr_time              = 0;
 int command_count          = 0;
+int randomNumber;
 
 /*
  * Method to hold the base pinMappings to from the arduinos inputs and outputs
@@ -28,16 +60,28 @@ int command_count          = 0;
  */
 void setup()
 {
-  pinMode(micPin, INPUT);
-  pinMode(joyStickPin, INPUT);
+  // Sets the random seed from noise when analog pin 0 is disconnected
+  // Will generate a different seed number each time the application is run
+  randomSeed(analogRead(randomPin)); 
+  
+  pinMode(micPin,                    INPUT);
+  pinMode(joyStickPin,               INPUT);
   pinMode(lightDependentResistorPin, INPUT);
-  pinMode(startButton, INPUT);
-
-  pinMode(speakerPin, OUTPUT);
-  pinMode(hexDisplayPin, OUTPUT);
+  pinMode(startSwitch,               INPUT);
+  pinMode(speakerPin,                OUTPUT);
+  pinMode(hexDisplayPin,             OUTPUT);
 
   int timeInterval = 1000 * 7; // seven second time interval to start 
   boolean game_started = false; // value to indicate whether game is active or not
+
+  // I2C LCD INIT
+  lcd.init();
+  // Print a message to the LCD.
+  lcd.backlight();
+  lcd.setCursor(0,0);
+  lcd.print(welcomeMessage);
+  lcd.setCursor(2,1);
+  lcd.print(startMessage);
 }
 
 /*
@@ -46,18 +90,18 @@ void setup()
 void panthers_nose()
 {
   int    vCurrentTime   = millis();
-  String vIssuedCommand = "Rub the Panthers Nose!";
+  
+  startPlaybackSample(panthersNoseSample, sizeof(panthersNoseSample));
      
-  speakCommand(vIssuedCommand);
+  displayMessage(panthersNoseCommand); // Displays command on LCD
      
-  if (nose_joy_stick == moved and getTime() - Time < currTimeInterval)
+  if (nose_joy_stick == moved and millis() - vCurrentTime < currTimeInterval)
   {
     Score += 1; 
   }
   else
   {
-    displayScore();
-    game_started = false;
+    gameOver(loosingMessage);
   }
 }
 
@@ -67,17 +111,18 @@ void panthers_nose()
 void victory_lights()
 {
   int    vCurrentTime   = millis();
-  String vIssuedCommand = "Light the Victory Lights!";
+  
+  startPlaybackSample(victoryLightsSample, sizeof(victoryLightsSample));
      
-  speakCommand(vIssuedCommand);
-  if (lightSensorPin == HIGH and getTime() - Time< currTimeInterval)
+  displayMessage(victoryLightsCommand); // Displays command on LCD
+  
+  if (lightSensorPin == HIGH and millis() - vCurrentTime < currTimeInterval)
   {
     Score += 1; 
   }
   else
   {
-    displayScore();
-    game_started = false;
+    gameOver(loosingMessage);
   }
 }
 
@@ -87,27 +132,26 @@ void victory_lights()
 void hail_to_pitt()
 {
   int    vCurrentTime   = millis();
-  String vIssuedCommand = "Cheer Hail to Pitt!";
+  
+  startPlaybackSample(hailToPittSample, sizeof(hailToPittSample));
      
-  speakCommand(vIssuedCommand);
+  displayMessage(hailToPittCommand); // Displays command on LCD
      
-  if (microphonePin == HIGH and getTime() - Time < currTimeInterval)
+  if (microphonePin == HIGH and millis() - vCurrentTime < currTimeInterval)
   {
     Score += 1; 
   }
   else
   {
-    displayScore();
-    game_started = false;
+    gameOver(loosingMessage);
   }
 }
 
-/*
- * Method to hold functionality that allows  game to speak commands to the player.
- */
-void speakCommand()
+void gameOver(String pMessage)
 {
-  
+  game_started = false;
+  displayMessage(pMessage);
+  displayScore();
 }
 
 /*
@@ -116,9 +160,7 @@ void speakCommand()
  */
 String pickRamdomCommand()
 {
-  String random_command = random(hail_to_pitt(), 
-                                 victory_lights(), 
-                                 panthers_nose());  
+  int random_command = random(3);  
   command_count += 1;
   return random_command;
 }
@@ -145,12 +187,20 @@ void displayScore()
 }
 
 /*
+ * Method to hold the functionality to display current commands and game messages on the LCD display
+ */
+void displayMessage()
+{
+
+}
+
+/*
  * Main application loop that holds the overarching logic flow for the pitt-traditions
  * Bop-It game.
  */
 void loop()
 {
-  if (startButton == HIGH)
+  if (startSwitch == HIGH)
   {
     game_started = true;
   }
@@ -161,29 +211,30 @@ void loop()
      
   while(game_started == true)
   {
+    
     if (command_count >= 99)
     {
-      playWinningJingle();
+      startPlaybackSample(hailToPittWinningJingle, sizeof(hailToPittWinningJingle));
+      displayMessage("GAME OVER. YOU WON!");
       game_started = false;
     }
+    
     issuedCommand = pickRandomCommand();
+    
     switch(issuedCommand)
     {
-      case HAIL_TO_PITT:
+      case 0:
         hail_to_pitt();
         break;
-      case VICTORY_LIGHTS:
+      case 1:
         victory_lights();
         break;
-      case PANTHERS_NOSE;
+      case 2;
         panthers_nose();
         break;
       default:
         raise_application_error();
         break;
-    }
-      
-       
-    }
+    }    
   }
 }
