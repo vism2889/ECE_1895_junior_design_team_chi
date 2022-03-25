@@ -19,3 +19,15 @@ Spring 2022 <br>
 
 # Proposed Project Description
 TBD
+
+
+
+# Citations & References:
+## Arduino
+- https://www.youtube.com/watch?v=m1HEwgHSBrs&t=9s
+- https://www.arduino.cc/en/Reference/Random
+## Altium
+- TBD
+## Fusion360
+- TBD
+
