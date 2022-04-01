@@ -214,7 +214,6 @@ boolean readFromMicrophone()
     *  Can set a minimum threshold (2V?) to successfully show a user input
     */
     
-  micVal     = analogRead(micPin);
   if (micVal > 2) 
   {
     cheer = true;
