@@ -31,6 +31,7 @@ Spring 2022 <br>
 - [Mic Example](https://www.aranacorp.com/en/using-a-microphone-with-arduino/)
 - [Text To Speech](https://ttsmp3.com/)
 - [Updated Audio Converter](https://github.com/damellis/EncodeAudio/blob/36c9dcb94ca66bf2e319c84b3f95d38b755265b2/EncodeAudio.pde)
+- [Sampling From Microphone](https://learn.adafruit.com/adafruit-microphone-amplifier-breakout/measuring-sound-levels)
 ## Altium
 - TBD
 ## Fusion360
