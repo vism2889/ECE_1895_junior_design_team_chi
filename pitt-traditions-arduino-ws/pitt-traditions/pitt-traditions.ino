@@ -1,5 +1,5 @@
 /**************************************************************
- * AUTHOR(S):    Morgan Visnesky
+ * AUTHOR(S):    Morgan Visnesky and Chris Guiher
  * DATE:         03/18/2022
  * FILENAME:     pitt-traditions.ino
  * ORGANIZATION: Junior Design Team CHI
@@ -178,10 +178,43 @@ void displayMessage(String pMessage)
  */
 boolean readFromMicrophone()
 {
+  unsigned long startMillis= millis();  // Start of sample window
+  const int sampleWindow = 50; // Sample window width in mS (50 mS = 20Hz)
+  
   int micVal = 0;
   boolean cheer = false;
-  micVal     = analogRead(micPin);
-  if (micVal > 600) 
+  
+  unsigned long startMillis= millis();  // Start of sample window
+  unsigned int peakToPeak = 0;   // peak-to-peak level
+  unsigned int signalMax = 0;
+  unsigned int signalMin = 1024;
+
+  // collect data for 50 mS
+  while (millis() - startMillis < sampleWindow)
+  {
+    sample = analogRead(0);
+    if (sample < 1024)  // toss out spurious readings
+    {
+       if (sample > signalMax)
+       {
+         signalMax = sample;  // save just the max levels
+       }
+       else if (sample < signalMin)
+       {
+         signalMin = sample;  // save just the min levels
+       }
+     }
+   }
+   peakToPeak = signalMax - signalMin;  // max - min = peak-peak amplitude
+   double micVal = (peakToPeak * 5.0) / 1024;  // convert to volts
+
+   /* 
+    *  For ambient noise, peakToPeak voltage tends to be near negligible. 
+    *  When a user speaks near the microphone, peakToPeak increases significantly. 
+    *  Can set a minimum threshold (2V?) to successfully show a user input
+    */
+    
+  if (micVal > 2) 
   {
     cheer = true;
   }
