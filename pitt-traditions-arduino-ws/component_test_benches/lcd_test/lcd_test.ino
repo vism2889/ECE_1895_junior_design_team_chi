@@ -47,8 +47,8 @@ void loop() {
         lcd.noBlinkLED();
     }
     
-    // String num = String(millis()/1000);
-    // lcd.setCursor(0,1);
+    String num = String(millis()/1000);
+    //lcd.setCursor(0,1);
     // lcd.print("Score: " + num);
     hailToPittMessage();
     delay(1000);
@@ -58,10 +58,13 @@ void loop() {
     delay(1000);
     welcomeMessage();
     delay(1000);
-    roundSuccessMessage();
+    roundSuccessMessage(num);
     delay(1000);
-    roundFailMessage();
+    roundFailMessage(num);
     delay(1000);
+    gameWonMessage(num);
+    delay(1000);
+    gameOverMessage(num);
 }
 
 void serialEvent() {

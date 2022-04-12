@@ -19,8 +19,8 @@
 #include "pin-mapping.h"       // Project Pin-mapping Definitions
 #include "game-samples.h"      // Project Audio Samples
 #include "game-messages.h"     // Project game messages
+#include "lcd_messages.h"      // Methods that hold LCD messages
 
-LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
 
 // STATE VARIABLES
 int currTime      = 0;
@@ -47,14 +47,10 @@ void setup()
   pinMode(speakerPin,                OUTPUT);
   pinMode(hexDisplayPin,             OUTPUT);
 
-  // I2C LCD INIT
+  Serial.begin(115200);
   lcd.init();
-  // Print a message to the LCD.
-  lcd.backlight();
-  lcd.setCursor(0,0);
-  lcd.print(welcomeMessage);
-  lcd.setCursor(2,1);
-  lcd.print(startMessage);
+
+  welcomeMessage();
 }
 
 /*
@@ -64,7 +60,7 @@ void panthers_nose()
 {
   boolean completedTaskInTime = false;
   startPlayback(panthersNoseSample, sizeof(panthersNoseSample));
-  displayMessage(panthersNoseCommand); // Displays command on LCD
+  panthersNoseMessage(); // Displays command on LCD
   
   currTime = millis();
      
@@ -79,7 +75,7 @@ void panthers_nose()
 
   if (!completedTaskInTime)
   {
-    gameOver(loosingMessage);
+    roundFailMessage(num);
   }
 }
 
@@ -90,7 +86,7 @@ void victory_lights()
 {
   boolean completedTaskInTime = false;
   startPlayback(victoryLightsSample, sizeof(victoryLightsSample));
-  displayMessage(victoryLightsCommand); // Displays command on LCD
+  lightVictoryLightMessage(); // Displays command on LCD
   
   currTime = millis();
 
@@ -105,7 +101,7 @@ void victory_lights()
     
   if (!completedTaskInTime)
   {
-    gameOver(loosingMessage);
+    roundFailMessage(num);
   }
 }
 
@@ -116,7 +112,7 @@ void hail_to_pitt()
 {
   boolean completedTaskInTime = false;
   startPlayback(hailToPittSample, sizeof(hailToPittSample));
-  displayMessage(hailToPittCommand); // Displays command on LCD
+  hailToPittMessage(); // Displays command on LCD
   currTime = millis();
   
   while (millis() - currTime < timeInterval)
@@ -130,19 +126,10 @@ void hail_to_pitt()
   
   if (!completedTaskInTime)
   {
-    gameOver(loosingMessage);
+    roundFailMessage(num);
   }
 }
 
-/*
- * Method to hold functionality that is executed when the game ends
- */
-void gameOver(String pMessage)
-{
-  game_started = false;
-  displayMessage(pMessage);
-  displayScore();
-}
 
 /*
  * Method to hold functionality that chooses a command at random from a list of
@@ -169,34 +156,6 @@ void raise_application_error()
 void playWinningJingle()
 {
 
-}
-
-/*
- * Method to hold the functionality to display the current score
- */
-void displayScore()
-{
-  lcd.init();
-  // Print a message to the LCD.
-  lcd.backlight();
-  lcd.setCursor(0,0);
-  lcd.print("Pitt Traditions");
-  lcd.setCursor(2,1);
-  lcd.print("Score: " + userScore);
-}
-
-/*
- * Method to hold the functionality to display current commands and game messages on the LCD display
- */
-void displayMessage(String pMessage)
-{
-  lcd.init();
-  // Print a message to the LCD.
-  lcd.backlight();
-  lcd.setCursor(0,0);
-  lcd.print(pMessage);
-  lcd.setCursor(2,1);
-  lcd.print("Score: " + userScore);
 }
 
 /*
@@ -258,6 +217,20 @@ boolean readFromMicrophone()
  */
 void loop()
 {
+
+  // Setups LCD for correct display settings
+  if(dtaLen == 11) {
+    int r = (dtaUart[0]-'0')*100 + (dtaUart[1] - '0')*10 + (dtaUart[2] - '0'); 
+    int g = (dtaUart[4]-'0')*100 + (dtaUart[5] - '0')*10 + (dtaUart[6] - '0');
+    int b = (dtaUart[8]-'0')*100 + (dtaUart[9] - '0')*10 + (dtaUart[10] - '0');
+        
+    dtaLen = 0;
+        
+    lcd.setRGB(r, g, b);
+    lcd.stopBlink();
+    lcd.noBlinkLED();
+  }// END LCD display settings
+
   if (startSwitch == HIGH)
   {
     game_started = true;
@@ -273,7 +246,7 @@ void loop()
     if (command_count >= 99)
     {
       //startPlaybackSample(hailToPittWinningJingle, sizeof(hailToPittWinningJingle));
-      displayMessage("GAME OVER. YOU WON!");
+      gameOverMessage();
       game_started = false;
     }
     else
