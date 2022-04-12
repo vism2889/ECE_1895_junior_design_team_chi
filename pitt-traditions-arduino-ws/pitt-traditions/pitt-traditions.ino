@@ -62,17 +62,22 @@ void setup()
  */
 void panthers_nose()
 {
-  currTime = millis();
-  
+  boolean completedTaskInTime = false;
   startPlayback(panthersNoseSample, sizeof(panthersNoseSample));
-     
   displayMessage(panthersNoseCommand); // Displays command on LCD
+  
+  currTime = millis();
      
-  if (joyStickPin == HIGH and millis() - currTime < timeInterval)
+  while (millis() - currTime < timeInterval)
   {
-    userScore += 1; 
+    if (joyStickPin == HIGH)
+    {
+      userScore += 1; 
+      completedTaskInTime = true;
+    }
   }
-  else
+
+  if (!completedTaskInTime)
   {
     gameOver(loosingMessage);
   }
@@ -83,17 +88,22 @@ void panthers_nose()
  */
 void victory_lights()
 {
-  currTime = millis();
-  
+  boolean completedTaskInTime = false;
   startPlayback(victoryLightsSample, sizeof(victoryLightsSample));
-     
   displayMessage(victoryLightsCommand); // Displays command on LCD
   
-  if (photoResistorPin == HIGH and millis() - currTime < timeInterval)
+  currTime = millis();
+
+  while (millis() - currTime < timeInterval)
   {
-    userScore += 1; 
+    if (photoResistorPin == HIGH)
+    {
+      userScore += 1; 
+      completedTaskInTime = true;
+    }
   }
-  else
+    
+  if (!completedTaskInTime)
   {
     gameOver(loosingMessage);
   }
@@ -104,17 +114,21 @@ void victory_lights()
  */
 void hail_to_pitt()
 {
+  boolean completedTaskInTime = false;
+  startPlayback(hailToPittSample, sizeof(hailToPittSample));
+  displayMessage(hailToPittCommand); // Displays command on LCD
   currTime = millis();
   
-  startPlayback(hailToPittSample, sizeof(hailToPittSample));
-     
-  displayMessage(hailToPittCommand); // Displays command on LCD
-     
-  if (readFromMicrophone() and millis() - currTime < timeInterval)
-  {
-    userScore += 1; 
+  while (millis() - currTime < timeInterval)
+  {   
+    if (readFromMicrophone())
+    {
+      userScore += 1; 
+      completedTaskInTime = true;
+    }
   }
-  else
+  
+  if (!completedTaskInTime)
   {
     gameOver(loosingMessage);
   }
@@ -162,7 +176,13 @@ void playWinningJingle()
  */
 void displayScore()
 {
-
+  lcd.init();
+  // Print a message to the LCD.
+  lcd.backlight();
+  lcd.setCursor(0,0);
+  lcd.print("Pitt Traditions");
+  lcd.setCursor(2,1);
+  lcd.print("Score: " + userScore);
 }
 
 /*
@@ -170,7 +190,13 @@ void displayScore()
  */
 void displayMessage(String pMessage)
 {
-
+  lcd.init();
+  // Print a message to the LCD.
+  lcd.backlight();
+  lcd.setCursor(0,0);
+  lcd.print(pMessage);
+  lcd.setCursor(2,1);
+  lcd.print("Score: " + userScore);
 }
 
 /*
