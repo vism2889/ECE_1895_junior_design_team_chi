@@ -45,7 +45,6 @@ void setup()
   pinMode(photoResistorPin,          INPUT);
   pinMode(startSwitch,               INPUT);
   pinMode(speakerPin,                OUTPUT);
-  pinMode(hexDisplayPin,             OUTPUT);
   Serial.begin(115200);
   lcd.init();
   welcomeMessage();
@@ -66,12 +65,16 @@ void panthers_nose()
     {
       userScore += 1; 
       completedTaskInTime = true;
+      roundSuccessMessage(userScore);
+      delay(1000);
       break;
     }
   }
   if (!completedTaskInTime)
   {
+    game_started = false;
     roundFailMessage(userScore);
+    
   }
   timeInterval -= 20;
 }
@@ -87,15 +90,19 @@ void victory_lights()
   currTime = millis();
   while (millis() - currTime < timeInterval)
   {
+    //int photoTransState = analogRead(2);
     if (photoResistorPin == HIGH)
     {
       userScore += 1; 
       completedTaskInTime = true;
+      roundSuccessMessage(userScore);
+      delay(1000);
       break;
     }
   }
   if (!completedTaskInTime)
   {
+    game_started = false;
     roundFailMessage(userScore);
   }
   timeInterval -= 20;
@@ -116,11 +123,14 @@ void hail_to_pitt()
     {
       userScore += 1; 
       completedTaskInTime = true;
+      roundSuccessMessage(userScore);
+      delay(1000);
       break;
     }
   }
   if (!completedTaskInTime)
   {
+    game_started = false;
     roundFailMessage(userScore);
   }
   timeInterval -= 20;
@@ -133,7 +143,7 @@ void hail_to_pitt()
  */
 int pickRandomCommand()
 {
-  int random_command = random(3);  
+  int random_command = random(0,2);  
   command_count += 1;
   return random_command;
 }
@@ -203,8 +213,10 @@ void loop()
     lcd.noBlinkLED();
   }// END LCD display settings
 
-  if (startSwitch == HIGH)
+  int startState = digitalRead(startSwitch);
+  if (startState == HIGH)
   {
+    Serial.print("game started");
     game_started = true;
   }
   // else
@@ -231,9 +243,9 @@ void loop()
         case 1:
           victory_lights();
           break;
-        case 2:
-          panthers_nose();
-          break;
+//        case 2:
+//          panthers_nose();
+//          break;
         default:
           raise_application_error();
           break;
