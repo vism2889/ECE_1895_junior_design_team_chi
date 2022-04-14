@@ -15,19 +15,20 @@
 
 // IMPORTED CODE
 #include <PCM.h>               // Library for MP3 playback
-#include <LiquidCrystal_I2C.h> // Library for I2C LCD display 
+// #include <LiquidCrystal_I2C.h> // Library for I2C LCD display 
 #include "pin-mapping.h"       // Project Pin-mapping Definitions
 #include "game-samples.h"      // Project Audio Samples
-#include "game-messages.h"     // Project game messages
 #include "lcd_messages.h"      // Methods that hold LCD messages
 
 
 // STATE VARIABLES
+char dtaUart[15];
+char dtaLen = 0;
 int currTime      = 0;
 int command_count = 0;
 int userScore     = 0;
 int randomNumber;
-int timeInterval = 1000 * 7; // seven second time interval to start 
+int timeInterval = 1000 * 4; // four second time interval to start 
 boolean game_started = false; // value to indicate whether game is active or not
 
 /*
@@ -39,17 +40,14 @@ void setup()
   // Sets the random seed from noise when analog pin 0 is disconnected
   // Will generate a different seed number each time the application is run
   randomSeed(analogRead(randomPin)); 
-  
   pinMode(micPin,                    INPUT);
   pinMode(joyStickPin,               INPUT);
   pinMode(photoResistorPin,          INPUT);
   pinMode(startSwitch,               INPUT);
   pinMode(speakerPin,                OUTPUT);
   pinMode(hexDisplayPin,             OUTPUT);
-
   Serial.begin(115200);
   lcd.init();
-
   welcomeMessage();
 }
 
@@ -61,22 +59,21 @@ void panthers_nose()
   boolean completedTaskInTime = false;
   startPlayback(panthersNoseSample, sizeof(panthersNoseSample));
   panthersNoseMessage(); // Displays command on LCD
-  
   currTime = millis();
-     
   while (millis() - currTime < timeInterval)
   {
     if (joyStickPin == HIGH)
     {
       userScore += 1; 
       completedTaskInTime = true;
+      break;
     }
   }
-
   if (!completedTaskInTime)
   {
-    roundFailMessage(num);
+    roundFailMessage(userScore);
   }
+  timeInterval -= 20;
 }
 
 /*
@@ -87,22 +84,21 @@ void victory_lights()
   boolean completedTaskInTime = false;
   startPlayback(victoryLightsSample, sizeof(victoryLightsSample));
   lightVictoryLightMessage(); // Displays command on LCD
-  
   currTime = millis();
-
   while (millis() - currTime < timeInterval)
   {
     if (photoResistorPin == HIGH)
     {
       userScore += 1; 
       completedTaskInTime = true;
+      break;
     }
   }
-    
   if (!completedTaskInTime)
   {
-    roundFailMessage(num);
+    roundFailMessage(userScore);
   }
+  timeInterval -= 20;
 }
 
 /*
@@ -114,20 +110,20 @@ void hail_to_pitt()
   startPlayback(hailToPittSample, sizeof(hailToPittSample));
   hailToPittMessage(); // Displays command on LCD
   currTime = millis();
-  
   while (millis() - currTime < timeInterval)
   {   
     if (readFromMicrophone())
     {
       userScore += 1; 
       completedTaskInTime = true;
+      break;
     }
   }
-  
   if (!completedTaskInTime)
   {
-    roundFailMessage(num);
+    roundFailMessage(userScore);
   }
+  timeInterval -= 20;
 }
 
 
@@ -151,54 +147,35 @@ void raise_application_error()
 }
 
 /*
- * Method to hold the functionality to play the 'Hail to Pitt' song once the game has been won
- */
-void playWinningJingle()
-{
-
-}
-
-/*
  * Method to hold the functionality to read an analog value from the microphone
  */
 boolean readFromMicrophone()
 {
   unsigned long startMillis= millis();  // Start of sample window
   const int sampleWindow = 50; // Sample window width in mS (50 mS = 20Hz)
-  
-  int micVal = 0;
+  double micVal = 0;
   boolean cheer = false;
-  
-  unsigned long startMillis= millis();  // Start of sample window
+  startMillis= millis();  // Start of sample window
   unsigned int peakToPeak = 0;   // peak-to-peak level
   unsigned int signalMax = 0;
   unsigned int signalMin = 1024;
-
-  // collect data for 50 mS
-  while (millis() - startMillis < sampleWindow)
+  while (millis() - startMillis < sampleWindow) // collect data for 50 mS
   {
-    sample = analogRead(0);
+    int sample = analogRead(0);
     if (sample < 1024)  // toss out spurious readings
     {
-       if (sample > signalMax)
-       {
-         signalMax = sample;  // save just the max levels
-       }
-       else if (sample < signalMin)
-       {
-         signalMin = sample;  // save just the min levels
-       }
-     }
-   }
-   peakToPeak = signalMax - signalMin;  // max - min = peak-peak amplitude
-   double micVal = (peakToPeak * 5.0) / 1024;  // convert to volts
-
-   /* 
-    *  For ambient noise, peakToPeak voltage tends to be near negligible. 
-    *  When a user speaks near the microphone, peakToPeak increases significantly. 
-    *  Can set a minimum threshold (2V?) to successfully show a user input
-    */
-    
+      if (sample > signalMax)
+      {
+        signalMax = sample;  // save just the max levels
+      }
+      else if (sample < signalMin)
+      {
+        signalMin = sample;  // save just the min levels
+      }
+    }
+  }
+  peakToPeak = signalMax - signalMin;  // max - min = peak-peak amplitude
+  micVal = (peakToPeak * 5.0) / 1024;  // convert to volts 
   if (micVal > 2) 
   {
     cheer = true;
@@ -207,7 +184,6 @@ boolean readFromMicrophone()
   {
     cheer = false;
   }
-
   return cheer;
 }
 
@@ -216,16 +192,12 @@ boolean readFromMicrophone()
  * Bop-It game.
  */
 void loop()
-{
-
-  // Setups LCD for correct display settings
-  if(dtaLen == 11) {
+{ 
+  if(dtaLen == 11) { // Setups LCD for correct display settings
     int r = (dtaUart[0]-'0')*100 + (dtaUart[1] - '0')*10 + (dtaUart[2] - '0'); 
     int g = (dtaUart[4]-'0')*100 + (dtaUart[5] - '0')*10 + (dtaUart[6] - '0');
     int b = (dtaUart[8]-'0')*100 + (dtaUart[9] - '0')*10 + (dtaUart[10] - '0');
-        
     dtaLen = 0;
-        
     lcd.setRGB(r, g, b);
     lcd.stopBlink();
     lcd.noBlinkLED();
@@ -235,24 +207,22 @@ void loop()
   {
     game_started = true;
   }
-  else
-  {
-    game_started = false;
-  }
+  // else
+  // {
+  //   game_started = false;
+  // }
 
   // GAME PLAY LOGIC FLOW
   while(game_started == true)
   {
-    if (command_count >= 99)
+    if (userScore >= 99)
     {
-      //startPlaybackSample(hailToPittWinningJingle, sizeof(hailToPittWinningJingle));
-      gameOverMessage();
+      gameWonMessage(userScore);
       game_started = false;
     }
     else
     {
       int issuedCommand = pickRandomCommand();
-    
       switch(issuedCommand)
       {
         case 0:

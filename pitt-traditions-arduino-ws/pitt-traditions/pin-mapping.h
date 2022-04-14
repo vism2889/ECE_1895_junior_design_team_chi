@@ -20,7 +20,7 @@ const int photoResistorPin  = 2;
 const int startSwitch       = 8;
 
 // OUTPUT VARIABLES THAT MAP TO ARDUINO PINS
-const int speakerPin        = 4;
+const int speakerPin        = 11;
 const int hexDisplayPin     = 7;
 
 // 'RANDOM' VARIABLES THAT MAP TO ARDUINO PINS
