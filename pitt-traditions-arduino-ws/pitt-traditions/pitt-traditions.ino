@@ -61,7 +61,8 @@ void panthers_nose()
   currTime = millis();
   while (millis() - currTime < timeInterval)
   {
-    if (joyStickPin == HIGH)
+    int joyStickState = analogRead(1);
+    if (joyStickState <= 400 or joyStickState >= 620)
     {
       userScore += 1; 
       completedTaskInTime = true;
@@ -90,8 +91,8 @@ void victory_lights()
   currTime = millis();
   while (millis() - currTime < timeInterval)
   {
-    //int photoTransState = analogRead(2);
-    if (photoResistorPin == HIGH)
+    int photoTransState = digitalRead(2);
+    if (photoTransState == HIGH)
     {
       userScore += 1; 
       completedTaskInTime = true;
@@ -240,12 +241,12 @@ void loop()
         case 0:
           hail_to_pitt();
           break;
-        case 1:
-          victory_lights();
-          break;
-//        case 2:
-//          panthers_nose();
+//        case 1:
+//          victory_lights();
 //          break;
+        case 1:
+          panthers_nose();
+          break;
         default:
           raise_application_error();
           break;
