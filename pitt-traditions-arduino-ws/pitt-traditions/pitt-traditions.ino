@@ -87,6 +87,7 @@ void victory_lights()
 {
   boolean completedTaskInTime = false;
   startPlayback(victoryLightsSample, sizeof(victoryLightsSample));
+  delay(1000);
   lightVictoryLightMessage(); // Displays command on LCD
   currTime = millis();
   while (millis() - currTime < timeInterval)
@@ -116,6 +117,7 @@ void hail_to_pitt()
 {
   boolean completedTaskInTime = false;
   startPlayback(hailToPittSample, sizeof(hailToPittSample));
+  delay(1000);
   hailToPittMessage(); // Displays command on LCD
   currTime = millis();
   while (millis() - currTime < timeInterval)
@@ -144,7 +146,7 @@ void hail_to_pitt()
  */
 int pickRandomCommand()
 {
-  int random_command = random(0,2);  
+  int random_command = random(0,3);  
   command_count += 1;
   return random_command;
 }
@@ -215,7 +217,7 @@ void loop()
   }// END LCD display settings
 
   int startState = digitalRead(startSwitch);
-  if (startState == HIGH)
+  if (startState == LOW)
   {
     Serial.print("game started");
     game_started = true;
@@ -241,10 +243,10 @@ void loop()
         case 0:
           hail_to_pitt();
           break;
-//        case 1:
-//          victory_lights();
-//          break;
         case 1:
+          victory_lights();
+          break;
+        case 2:
           panthers_nose();
           break;
         default:

@@ -48,6 +48,7 @@ void loop() {
     }
     
     String num = String(millis()/1000);
+    
     //lcd.setCursor(0,1);
     // lcd.print("Score: " + num);
     hailToPittMessage();

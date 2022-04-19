@@ -53,7 +53,7 @@ void welcomeMessage(){
     lcd.print("Bop-It Game");
 }
 
-void roundSuccessMessage(int pScore){
+void roundSuccessMessage(String pScore){
     lcd.init();
     lcd.setCursor(5,0);
     lcd.print("HORRAY");
@@ -62,7 +62,7 @@ void roundSuccessMessage(int pScore){
     lcd.print("Score: " + score_);
 }
 
-void roundFailMessage(int pScore){
+void roundFailMessage(String pScore){
     lcd.init();
     lcd.setCursor(0,0);
     lcd.print("OOPS! Try Again!");
@@ -71,7 +71,7 @@ void roundFailMessage(int pScore){
     lcd.print("Score: " + score_);
 }
 
-void gameWonMessage(int pScore){
+void gameWonMessage(String pScore){
     lcd.init();
     lcd.setCursor(4,0);
     lcd.print("YOU WON!");
@@ -80,7 +80,7 @@ void gameWonMessage(int pScore){
     lcd.print("Score: " + score_);
 }
 
-void gameOverMessage(int pScore){
+void gameOverMessage(String pScore){
     lcd.init();
     lcd.setCursor(4,0);
     lcd.print("GAME OVER");
