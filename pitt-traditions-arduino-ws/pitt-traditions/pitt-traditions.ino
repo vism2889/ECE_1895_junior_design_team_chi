@@ -21,14 +21,13 @@
 #include "lcd_messages.h"      // Methods that hold LCD messages
 
 
-// STATE VARIABLES
 char dtaUart[15];
 char dtaLen = 0;
-int currTime      = 0;
+unsigned long currTime = 0;
 int command_count = 0;
 int userScore     = 0;
 int randomNumber;
-int timeInterval = 1000 * 4; // four second time interval to start 
+unsigned long timeInterval = 1000 * 4; // four second time interval to start 
 boolean game_started = false; // value to indicate whether game is active or not
 
 /*
@@ -58,8 +57,8 @@ void panthers_nose()
   boolean completedTaskInTime = false;
   startPlayback(panthersNoseSample, sizeof(panthersNoseSample));
   panthersNoseMessage(); // Displays command on LCD
-  currTime = millis();
-  while (millis() - currTime < timeInterval)
+  currTime = abs(millis());
+  while (abs(millis()) - currTime < timeInterval)
   {
     int joyStickState = analogRead(1);
     if (joyStickState <= 400 or joyStickState >= 620)
@@ -89,8 +88,8 @@ void victory_lights()
   startPlayback(victoryLightsSample, sizeof(victoryLightsSample));
   delay(1000);
   lightVictoryLightMessage(); // Displays command on LCD
-  currTime = millis();
-  while (millis() - currTime < timeInterval)
+  currTime = abs(millis());
+  while (abs(millis()) - currTime < timeInterval)
   {
     int photoTransState = digitalRead(2);
     if (photoTransState == HIGH)
@@ -119,8 +118,8 @@ void hail_to_pitt()
   startPlayback(hailToPittSample, sizeof(hailToPittSample));
   delay(1000);
   hailToPittMessage(); // Displays command on LCD
-  currTime = millis();
-  while (millis() - currTime < timeInterval)
+  currTime = abs(millis());
+  while (abs(millis()) - currTime < timeInterval)
   {   
     if (readFromMicrophone())
     {
@@ -164,7 +163,7 @@ void raise_application_error()
  */
 boolean readFromMicrophone()
 {
-  unsigned long startMillis= millis();  // Start of sample window
+  unsigned long startMillis= abs(millis());  // Start of sample window
   const int sampleWindow = 50; // Sample window width in mS (50 mS = 20Hz)
   double micVal = 0;
   boolean cheer = false;
@@ -172,7 +171,7 @@ boolean readFromMicrophone()
   unsigned int peakToPeak = 0;   // peak-to-peak level
   unsigned int signalMax = 0;
   unsigned int signalMin = 1024;
-  while (millis() - startMillis < sampleWindow) // collect data for 50 mS
+  while (abs(millis()) - startMillis < sampleWindow) // collect data for 50 mS
   {
     int sample = analogRead(0);
     if (sample < 1024)  // toss out spurious readings
