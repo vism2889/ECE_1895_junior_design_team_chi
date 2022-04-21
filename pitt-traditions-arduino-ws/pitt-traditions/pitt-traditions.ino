@@ -14,16 +14,17 @@
  **************************************************************/
 
 // IMPORTED CODE
-#include <PCM.h>               // Library for MP3 playback
+#include "PCM.h"               // Library for MP3 playback
 // #include <LiquidCrystal_I2C.h> // Library for I2C LCD display 
 #include "pin-mapping.h"       // Project Pin-mapping Definitions
 #include "game-samples.h"      // Project Audio Samples
 #include "lcd_messages.h"      // Methods that hold LCD messages
 
 
+// STATE VARIABLES
 char dtaUart[15];
 char dtaLen = 0;
-unsigned long currTime = 0;
+unsigned long currTime      = 0;
 int command_count = 0;
 int userScore     = 0;
 int randomNumber;
@@ -55,12 +56,19 @@ void setup()
 void panthers_nose()
 {
   boolean completedTaskInTime = false;
-  startPlayback(panthersNoseSample, sizeof(panthersNoseSample));
+  //startPlayback(panthersNoseSample, sizeof(panthersNoseSample))
+  delay(1000);
+  tone(11, 523);
   panthersNoseMessage(); // Displays command on LCD
+  delay(30);
+  noTone(11);
   currTime = abs(millis());
   while (abs(millis()) - currTime < timeInterval)
   {
+    
+    
     int joyStickState = analogRead(1);
+    int photoTransState = digitalRead(4);
     if (joyStickState <= 400 or joyStickState >= 620)
     {
       userScore += 1; 
@@ -69,13 +77,21 @@ void panthers_nose()
       delay(1000);
       break;
     }
+    if (readFromMicrophone())
+    {
+      break;
+    }
+    if (photoTransState == HIGH)
+    {
+      break;
+   }
   }
   if (!completedTaskInTime)
   {
     game_started = false;
     roundFailMessage(userScore);
-    
   }
+  
   timeInterval -= 20;
 }
 
@@ -85,19 +101,37 @@ void panthers_nose()
 void victory_lights()
 {
   boolean completedTaskInTime = false;
-  startPlayback(victoryLightsSample, sizeof(victoryLightsSample));
+  //startPlayback(victoryLightsSample, sizeof(victoryLightsSample));
+  
+
   delay(1000);
+  tone(11, 261);
   lightVictoryLightMessage(); // Displays command on LCD
+  delay(30);
+  noTone(11);
   currTime = abs(millis());
   while (abs(millis()) - currTime < timeInterval)
   {
-    int photoTransState = digitalRead(2);
+    
+    int joyStickState = analogRead(1);
+    int photoTransState = digitalRead(4);
     if (photoTransState == HIGH)
     {
       userScore += 1; 
       completedTaskInTime = true;
       roundSuccessMessage(userScore);
       delay(1000);
+      break;
+    }
+    if (readFromMicrophone())
+    {
+      if(photoTransState = LOW)
+      {
+      break;
+      }
+    }
+    if (joyStickState <= 400 or joyStickState >= 620)
+    {
       break;
     }
   }
@@ -115,18 +149,37 @@ void victory_lights()
 void hail_to_pitt()
 {
   boolean completedTaskInTime = false;
-  startPlayback(hailToPittSample, sizeof(hailToPittSample));
+  //startPlayback(hailToPittSample, sizeof(hailToPittSample));
   delay(1000);
+  tone(11, 1047);
+  
   hailToPittMessage(); // Displays command on LCD
+  delay(30);
+  noTone(11);
+  
   currTime = abs(millis());
   while (abs(millis()) - currTime < timeInterval)
-  {   
+  {
+    int joyStickState = analogRead(1);
+    int photoTransState = digitalRead(4);
     if (readFromMicrophone())
     {
-      userScore += 1; 
-      completedTaskInTime = true;
-      roundSuccessMessage(userScore);
-      delay(1000);
+      if(photoTransState == LOW)
+      {
+        userScore += 1; 
+        completedTaskInTime = true;
+        roundSuccessMessage(userScore);
+        delay(1000);
+        break;
+      }
+    }
+   
+    if (photoTransState == HIGH)
+    {
+     break;
+    }
+    if (joyStickState <= 400 or joyStickState >= 620)
+    {
       break;
     }
   }
@@ -173,7 +226,7 @@ boolean readFromMicrophone()
   unsigned int signalMin = 1024;
   while (abs(millis()) - startMillis < sampleWindow) // collect data for 50 mS
   {
-    int sample = analogRead(0);
+    int sample = analogRead(3);
     if (sample < 1024)  // toss out spurious readings
     {
       if (sample > signalMax)
@@ -188,7 +241,7 @@ boolean readFromMicrophone()
   }
   peakToPeak = signalMax - signalMin;  // max - min = peak-peak amplitude
   micVal = (peakToPeak * 5.0) / 1024;  // convert to volts 
-  if (micVal > 2) 
+  if (micVal > 3.5) 
   {
     cheer = true;
   }
@@ -218,6 +271,13 @@ void loop()
   int startState = digitalRead(startSwitch);
   if (startState == LOW)
   {
+    if(!game_started)
+    {
+      timeInterval = 1000 * 4;
+      currTime      = 0;
+      command_count = 0;
+      userScore     = 0;
+    }
     Serial.print("game started");
     game_started = true;
   }
@@ -239,15 +299,15 @@ void loop()
       int issuedCommand = pickRandomCommand();
       switch(issuedCommand)
       {
-        case 0:
-          hail_to_pitt();
-          break;
-        case 1:
-          victory_lights();
-          break;
-        case 2:
-          panthers_nose();
-          break;
+       case 0:
+        hail_to_pitt();
+        break;
+       case 1:
+        victory_lights();
+        break;
+       case 2:
+         panthers_nose();
+         break;
         default:
           raise_application_error();
           break;
