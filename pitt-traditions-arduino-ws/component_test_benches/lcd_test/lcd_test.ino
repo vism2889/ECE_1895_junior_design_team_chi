@@ -1,18 +1,37 @@
+/**************************************************************
+ * AUTHOR(S):    Morgan Visnesky
+ * DATE:         04/10/2022
+ * FILENAME:     lcd_test.ino
+ * ORGANIZATION: Junior Design Team CHI
+ * TEAM MEMBERS: 
+ *              Chris Guiher 
+ *              Alex Shuster
+ *              Morgan Visnesky
+ *              David Cramer
+ *
+ * DESCRIPTION: 
+ *     Simple test code to ensure lcd display functions properly
+ * NOTES:
+ **************************************************************/
+
+
 #include <Wire.h>
 #include "DFRobot_LCD.h"
+#include "lcd_messages.h"
 
 char dtaUart[15];
 char dtaLen = 0;
 
-DFRobot_LCD lcd(16,2);  //16 characters and 2 lines of show
+//DFRobot_LCD lcd(16,2);  //16 characters and 2 lines of show
 
 void setup() {
   Serial.begin(115200);
     lcd.init();
-    lcd.setCursor(0,0);
-    lcd.print("Pitt Traditions");
-    lcd.setCursor(0,1);
-    lcd.print("Score: ");
+    //lightVictoryLightMessage();
+    // lcd.setCursor(0,0);
+    // lcd.print("Pitt Traditions");
+    // lcd.setCursor(0,1);
+    // lcd.print("Score: ");
 }
 
 void loop() {
@@ -29,8 +48,24 @@ void loop() {
     }
     
     String num = String(millis()/1000);
-    lcd.setCursor(0,1);
-    lcd.print("Score: " + num);
+    
+    //lcd.setCursor(0,1);
+    // lcd.print("Score: " + num);
+    hailToPittMessage();
+    delay(1000);
+    lightVictoryLightMessage();
+    delay(1000);
+    panthersNoseMessage();
+    delay(1000);
+    welcomeMessage();
+    delay(1000);
+    roundSuccessMessage(num);
+    delay(1000);
+    roundFailMessage(num);
+    delay(1000);
+    gameWonMessage(num);
+    delay(1000);
+    gameOverMessage(num);
 }
 
 void serialEvent() {
