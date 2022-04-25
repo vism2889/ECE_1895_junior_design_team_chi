@@ -38,8 +38,9 @@ Once a game has begun, you will be prompted with a task on the screen
 - Rub the Panther's Nose: Rub the Panther's Nose back and forth
 - Cheer Hail to Pitt: Yell into the microphone and show off your Pitt Pride.
 
-If you choose the correct input, you will get a point. 
-If you choose the incorrect input or run out of time, the game ends.
+If you choose the correct input, you will get a point. <br>
+If you choose the incorrect input or run out of time, the game ends. <br>
+After 99 consecutive points are scored the user will have won the game, and the user will be prompted with a winning message.
 
 # Citations & References:
 ## Arduino Citations
