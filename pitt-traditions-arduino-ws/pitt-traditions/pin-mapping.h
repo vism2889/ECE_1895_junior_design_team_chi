@@ -14,13 +14,13 @@
  **************************************************************/
 
 // INPUT VARIABLES THAT MAP TO ARDUINO PINS
-const int micPin            = 13;
+const int micPin            = 17;
 const int joyStickPin       = 12;
-const int photoResistorPin  = 2;
-const int startSwitch       = 8;
+const int photoResistorPin  = 4;
+const int startSwitch       = 6;
 
 // OUTPUT VARIABLES THAT MAP TO ARDUINO PINS
-const int speakerPin        = 10;
+const int speakerPin        = 11;
 const int hexDisplayPin     = 7;
 
 // 'RANDOM' VARIABLES THAT MAP TO ARDUINO PINS
