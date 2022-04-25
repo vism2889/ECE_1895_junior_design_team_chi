@@ -45,7 +45,7 @@ TODO
 - [Updated Audio Converter](https://github.com/damellis/EncodeAudio/blob/36c9dcb94ca66bf2e319c84b3f95d38b755265b2/EncodeAudio.pde)
 - [Sampling From Microphone](https://learn.adafruit.com/adafruit-microphone-amplifier-breakout/measuring-sound-levels)
 ## Altium Citations
-- [Altium Tutorial] (https://www.altium.com/documentation/altium-designer/tutorial-complete-design-walkthrough) 
+- [Altium Tutorial](https://www.altium.com/documentation/altium-designer/tutorial-complete-design-walkthrough) 
 ## Fusion360 Citations
 - TBD
 
