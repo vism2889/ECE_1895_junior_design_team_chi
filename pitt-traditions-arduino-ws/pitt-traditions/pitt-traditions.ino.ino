@@ -59,16 +59,17 @@ void panthers_nose()
   //startPlayback(panthersNoseSample, sizeof(panthersNoseSample))
   delay(1000);
   tone(11, 523);
+
   panthersNoseMessage(); // Displays command on LCD
-  delay(30);
-  noTone(11);
   currTime = abs(millis());
   while (abs(millis()) - currTime < timeInterval)
   {
-    
+    if(abs(millis()) - currTime > 30)
+    {
+      noTone(11);
+    }
     
     int joyStickState = analogRead(1);
-    int photoTransState = digitalRead(4);
     if (joyStickState <= 400 or joyStickState >= 620)
     {
       userScore += 1; 
@@ -77,21 +78,13 @@ void panthers_nose()
       delay(1000);
       break;
     }
-    if (readFromMicrophone())
-    {
-      break;
-    }
-    if (photoTransState == HIGH)
-    {
-      break;
-   }
   }
   if (!completedTaskInTime)
   {
     game_started = false;
     roundFailMessage(userScore);
+    
   }
-  
   timeInterval -= 20;
 }
 
@@ -107,13 +100,13 @@ void victory_lights()
   delay(1000);
   tone(11, 261);
   lightVictoryLightMessage(); // Displays command on LCD
-  delay(30);
-  noTone(11);
   currTime = abs(millis());
   while (abs(millis()) - currTime < timeInterval)
   {
-    
-    int joyStickState = analogRead(1);
+    if(abs(millis()) - currTime > 30)
+    {
+      noTone(11);
+    }
     int photoTransState = digitalRead(4);
     if (photoTransState == HIGH)
     {
@@ -121,17 +114,6 @@ void victory_lights()
       completedTaskInTime = true;
       roundSuccessMessage(userScore);
       delay(1000);
-      break;
-    }
-    if (readFromMicrophone())
-    {
-      if(photoTransState = LOW)
-      {
-      break;
-      }
-    }
-    if (joyStickState <= 400 or joyStickState >= 620)
-    {
       break;
     }
   }
@@ -154,32 +136,19 @@ void hail_to_pitt()
   tone(11, 1047);
   
   hailToPittMessage(); // Displays command on LCD
-  delay(30);
-  noTone(11);
-  
   currTime = abs(millis());
   while (abs(millis()) - currTime < timeInterval)
   {
-    int joyStickState = analogRead(1);
-    int photoTransState = digitalRead(4);
+    if(abs(millis()) - currTime > 30)
+    {
+      noTone(11);
+    }   
     if (readFromMicrophone())
     {
-      if(photoTransState == LOW)
-      {
-        userScore += 1; 
-        completedTaskInTime = true;
-        roundSuccessMessage(userScore);
-        delay(1000);
-        break;
-      }
-    }
-   
-    if (photoTransState == HIGH)
-    {
-     break;
-    }
-    if (joyStickState <= 400 or joyStickState >= 620)
-    {
+      userScore += 1; 
+      completedTaskInTime = true;
+      roundSuccessMessage(userScore);
+      delay(1000);
       break;
     }
   }
