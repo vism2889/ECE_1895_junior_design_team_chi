@@ -32,7 +32,13 @@ There are 3 workspace directories included.  This is where all the project files
 # [Proposed Project Description](https://github.com/vism2889/ECE_1895_junior_design_team_chi/blob/base-arduino-functionality/Team%20CHI%20Design%20Proposal.pdf)
 
 # Game Play Instructions:
-TODO
+Press the red button to start a game. 
+Once a game has begun, you will be prompted with a task on the screen
+- Light the Victory Lights: Shine a flashlight on the top of the Cathedral of Learning
+- Rub the Panther's Nose: Rub the Panther's Nose back and forth
+- Cheer Hail to Pitt: Yell into the microphone and show off your Pitt Pride
+If you choose the correct input, you will get a point. 
+If you choose the incorrect input or run out of time, the game ends.
 
 # Citations & References:
 ## Arduino Citations
