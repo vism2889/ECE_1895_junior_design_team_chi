@@ -36,7 +36,8 @@ Press the red button to start a game.
 Once a game has begun, you will be prompted with a task on the screen
 - Light the Victory Lights: Shine a flashlight on the top of the Cathedral of Learning
 - Rub the Panther's Nose: Rub the Panther's Nose back and forth
-- Cheer Hail to Pitt: Yell into the microphone and show off your Pitt Pride
+- Cheer Hail to Pitt: Yell into the microphone and show off your Pitt Pride.
+
 If you choose the correct input, you will get a point. 
 If you choose the incorrect input or run out of time, the game ends.
 
