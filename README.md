@@ -2,7 +2,18 @@
 University of Pittsburgh <br>
 Swanson School of Engineering <br>
 Spring 2022 <br>
-### Repository to hold collaborator contributions to Team-Chi's Group Junior Design Project
+### Collaborator contributions to Team-Chi's Group Junior Design Project
+
+# Navigating Repository:
+There are 3 workspace directories included.  This is where all the project files and code can be found.<br>
+1. one for arduino files labeled `pitt-traditions-arduino-ws' 
+    - directory for the application files: `pitt-traditions`
+    - directory for component testbenches: `component_test_benches`
+    - directory for spoken-command mp3 files: `command_audio_files`
+    - directory that holds the code used to convert audio-samples into program memory: `Arduino MP3`
+3. one for Altium files labeled `pitt-traditions-altium-ws'
+4. one for Fusion360 files labeled `pitt-traditions-fusion360-ws'
+
 
 # Important Resources
 [Team Availability](https://www.when2meet.com/?14987485-l46cu)
@@ -21,9 +32,10 @@ Spring 2022 <br>
 # [Proposed Project Description](https://github.com/vism2889/ECE_1895_junior_design_team_chi/blob/base-arduino-functionality/Team%20CHI%20Design%20Proposal.pdf)
 
 # Game Play Instructions:
+TODO
 
 # Citations & References:
-## Arduino
+## Arduino Citations
 - [MP3 Example](https://www.youtube.com/watch?v=m1HEwgHSBrs&t=9s)
 - [Random Reference](https://www.arduino.cc/en/Reference/Random)
 - [I2C LCD Example #1](https://github.com/johnrickman/LiquidCrystal_I2C/blob/master/examples/HelloWorld/HelloWorld.pde)
@@ -32,8 +44,8 @@ Spring 2022 <br>
 - [Text To Speech](https://ttsmp3.com/)
 - [Updated Audio Converter](https://github.com/damellis/EncodeAudio/blob/36c9dcb94ca66bf2e319c84b3f95d38b755265b2/EncodeAudio.pde)
 - [Sampling From Microphone](https://learn.adafruit.com/adafruit-microphone-amplifier-breakout/measuring-sound-levels)
-## Altium
+## Altium Citations
 - TBD
-## Fusion360
+## Fusion360 Citations
 - TBD
 
