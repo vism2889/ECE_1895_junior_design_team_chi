@@ -6,13 +6,13 @@ Spring 2022 <br>
 
 # Navigating Repository:
 There are 3 workspace directories included.  This is where all the project files and code can be found.<br>
-1. one for arduino files labeled `pitt-traditions-arduino-ws' 
+1. one for arduino files labeled `pitt-traditions-arduino-ws` 
     - directory for the application files: `pitt-traditions`
     - directory for component testbenches: `component_test_benches`
     - directory for spoken-command mp3 files: `command_audio_files`
     - directory that holds the code used to convert audio-samples into program memory: `Arduino MP3`
-3. one for Altium files labeled `pitt-traditions-altium-ws'
-4. one for Fusion360 files labeled `pitt-traditions-fusion360-ws'
+3. one for Altium files labeled `pitt-traditions-altium-ws`
+4. one for Fusion360 files labeled `pitt-traditions-fusion360-ws`
 
 
 # Important Resources
